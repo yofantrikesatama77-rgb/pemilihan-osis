@@ -1,0 +1,6 @@
+{
+  "name": "OSIS VOTE – Pemilihan Ketua OSIS Digital",
+  "description": "Platform e-voting pemilihan Ketua OSIS sekolah yang modern, aman, transparan dengan otentikasi NISN dan real count interaktif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
