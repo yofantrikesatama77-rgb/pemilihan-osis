@@ -102,7 +102,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ setActivePage }) => {
 
         </div>
 
-      </div>N
+      </div>
     </div>
   );
 };
