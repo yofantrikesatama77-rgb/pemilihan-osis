@@ -96,7 +96,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ setActivePage }) => {
           <div className="mt-6 pt-5 border-t border-slate-800 text-center">
             <div className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>PIN Bawaan Pengujian: <code className="text-indigo-300 font-mono font-bold">admin123</code></span>
+              <span>PIN Bawaan Pengujian: <code className="text-indigo-300 font-mono font-bold">admin</code></span>
             </div>
           </div>
 
