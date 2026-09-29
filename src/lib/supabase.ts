@@ -118,20 +118,46 @@ ALTER TABLE public.candidate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.voters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.votes ENABLE ROW LEVEL SECURITY;
 
+-- Kebijakan Akses (Drop jika sudah ada agar aman dijalankan berulang kali tanpa error)
+DROP POLICY IF EXISTS "Public Read Settings" ON public.settings;
 CREATE POLICY "Public Read Settings" ON public.settings FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Update Settings" ON public.settings;
 CREATE POLICY "Public Update Settings" ON public.settings FOR ALL USING (true);
 
+DROP POLICY IF EXISTS "Public Read Candidate" ON public.candidate;
 CREATE POLICY "Public Read Candidate" ON public.candidate FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Update Candidate" ON public.candidate;
 CREATE POLICY "Public Update Candidate" ON public.candidate FOR ALL USING (true);
 
+DROP POLICY IF EXISTS "Public Read Voters" ON public.voters;
 CREATE POLICY "Public Read Voters" ON public.voters FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert/Update Voters" ON public.voters;
 CREATE POLICY "Public Insert/Update Voters" ON public.voters FOR ALL USING (true);
 
+DROP POLICY IF EXISTS "Public Manage Votes" ON public.votes;
 CREATE POLICY "Public Manage Votes" ON public.votes FOR ALL USING (true);
 
--- 6. REALTIME REPLICATION ENABLE
-ALTER PUBLICATION supabase_realtime ADD TABLE public.settings;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.candidate;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.voters;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.votes;
+-- 6. REALTIME REPLICATION ENABLE (Aman dari error duplicate_object jika sudah ditambahkan)
+DO $$
+BEGIN
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.settings;
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END;
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.candidate;
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END;
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.voters;
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END;
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.votes;
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END;
+END $$;
 `;

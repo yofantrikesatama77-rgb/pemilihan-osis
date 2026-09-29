@@ -22,8 +22,41 @@ import {
   RefreshCw,
   School,
   Sparkles,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Globe,
+  ExternalLink,
+  Terminal
 } from 'lucide-react';
+
+const VERCEL_JSON_CONFIG = `{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}`;
+
+const GIT_COMMANDS = `git init
+git add .
+git commit -m "Siap deploy OSIS VOTE ke Vercel"
+git branch -M main
+git remote add origin https://github.com/USERNAME/osis-vote.git
+git push -u origin main`;
 
 // Preset Logo Pilihan Sekolah
 const PRESET_LOGOS = [
@@ -87,9 +120,23 @@ export const ElectionSettings: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [showSqlCopied, setShowSqlCopied] = useState(false);
+  const [showVercelCopied, setShowVercelCopied] = useState(false);
+  const [showGitCopied, setShowGitCopied] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
+
+  const handleCopyVercelJson = () => {
+    navigator.clipboard.writeText(VERCEL_JSON_CONFIG);
+    setShowVercelCopied(true);
+    setTimeout(() => setShowVercelCopied(false), 2500);
+  };
+
+  const handleCopyGitCommands = () => {
+    navigator.clipboard.writeText(GIT_COMMANDS);
+    setShowGitCopied(true);
+    setTimeout(() => setShowGitCopied(false), 2500);
+  };
   const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -741,7 +788,114 @@ export const ElectionSettings: React.FC = () => {
         )}
       </div>
 
-      {/* SECTION 6: DANGER ZONE - RESET PEMILIHAN */}
+      {/* SECTION 6: ONLINEKAN APLIKASI KE VERCEL (vercel.app) */}
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-indigo-500/30 bg-slate-900/50 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+              <Globe className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>Onlinekan Aplikasi ke Vercel (vercel.app)</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 border border-emerald-700 text-emerald-400">
+                  vercel.json Siap
+                </span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Konfigurasi deployment gratis berkecepatan tinggi dengan domain otomatis <code className="text-indigo-300 font-mono">.vercel.app</code>.
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://vercel.com/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/25 flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <span>Buka Dashboard Vercel</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* 3 Steps Guide Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+            <div className="w-6 h-6 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 font-bold text-xs flex items-center justify-center mb-2.5">
+              1
+            </div>
+            <h4 className="text-xs font-bold text-white mb-1">Unggah ke GitHub</h4>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Buat repository baru di GitHub dan unggah folder kode aplikasi ini.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+            <div className="w-6 h-6 rounded-full bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center mb-2.5">
+              2
+            </div>
+            <h4 className="text-xs font-bold text-white mb-1">Impor di Vercel</h4>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Login ke Vercel dengan akun GitHub, klik <strong>Import Project</strong>, lalu pilih repository Anda.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+            <div className="w-6 h-6 rounded-full bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center mb-2.5">
+              3
+            </div>
+            <h4 className="text-xs font-bold text-white mb-1">Klik Deploy</h4>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Vercel otomatis membaca <code className="text-emerald-300 font-mono">vercel.json</code> dan aplikasi langsung online dalam 1 menit!
+            </p>
+          </div>
+        </div>
+
+        {/* vercel.json code snippet */}
+        <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-300 font-mono">vercel.json (Telah Dikonfigurasi di Root)</span>
+              <span className="text-[10px] text-slate-500 hidden sm:inline">SPA Rewrites & Asset Caching</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyVercelJson}
+              className="px-3 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+            >
+              {showVercelCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{showVercelCopied ? 'Tersalin!' : 'Salin Konfigurasi'}</span>
+            </button>
+          </div>
+          <pre className="text-[11px] font-mono text-slate-300 bg-slate-900/90 p-3 rounded-xl overflow-x-auto max-h-48 border border-slate-800/80">
+            {VERCEL_JSON_CONFIG}
+          </pre>
+        </div>
+
+        {/* CLI / Git snippet */}
+        <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-emerald-400" />
+              <span className="text-xs font-bold text-slate-300">Perintah Git (Opsional via Terminal Komputer)</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyGitCommands}
+              className="px-3 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+            >
+              {showGitCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{showGitCopied ? 'Tersalin!' : 'Salin Perintah Git'}</span>
+            </button>
+          </div>
+          <pre className="text-[11px] font-mono text-emerald-400/90 bg-slate-900/90 p-3 rounded-xl overflow-x-auto border border-slate-800/80">
+            {GIT_COMMANDS}
+          </pre>
+        </div>
+      </div>
+
+      {/* SECTION 7: DANGER ZONE - RESET PEMILIHAN */}
       <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-rose-900/50 bg-rose-950/15 relative overflow-hidden">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
