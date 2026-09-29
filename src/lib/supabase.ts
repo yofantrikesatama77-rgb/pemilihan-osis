@@ -1,14 +1,64 @@
 import { createClient } from '@supabase/supabase-js';
 
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://idhgqtmqzhfthrvxfixx.supabase.co';
-export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkaGdxdG1xemhmdGhydnhmaXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjUzOTQsImV4cCI6MjEwNjIwMTM5NH0.ujb0HHaxHXgUruR0pmQWdib1x3TkYQd1KV4oCJv2tWQ';
+const DEFAULT_SUPABASE_URL = 'https://idhgqtmqzhfthrvxfixx.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkaGdxdG1xemhmdGhydnhmaXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjUzOTQsImV4cCI6MjEwNjIwMTM5NH0.ujb0HHaxHXgUruR0pmQWdib1x3TkYQd1KV4oCJv2tWQ';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true
+function getValidSupabaseUrl(): string {
+  try {
+    const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
+    if (typeof envUrl === 'string' && envUrl.trim()) {
+      const trimmed = envUrl.trim();
+      const parsed = new URL(trimmed);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return trimmed;
+      }
+    }
+  } catch {
+    // If invalid URL, gracefully use default
   }
-});
+  return DEFAULT_SUPABASE_URL;
+}
+
+function getValidSupabaseKey(): string {
+  try {
+    const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
+    if (
+      typeof envKey === 'string' &&
+      envKey.trim().length > 20 &&
+      !envKey.includes('MY_') &&
+      !envKey.includes('YOUR_')
+    ) {
+      return envKey.trim();
+    }
+  } catch {
+    // If invalid key, gracefully use default
+  }
+  return DEFAULT_SUPABASE_ANON_KEY;
+}
+
+export const SUPABASE_URL = getValidSupabaseUrl();
+export const SUPABASE_ANON_KEY = getValidSupabaseKey();
+
+let clientInstance: any;
+try {
+  clientInstance = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+} catch (err) {
+  console.warn('Supabase client custom init warning, using default connection:', err);
+  clientInstance = createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+}
+
+export const supabase = clientInstance;
 
 // SQL Schema for user reference and setup in Supabase SQL editor
 export const SUPABASE_SETUP_SQL = `-- ==========================================
