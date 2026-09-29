@@ -54,9 +54,9 @@ export const Hero: React.FC<HeroProps> = ({ setActivePage }) => {
         {/* Main Hero Header */}
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white text-balance leading-tight">
-            SUARAMU, <br className="hidden sm:block" />
+            SUARA ANDA, <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
-              MASA DEPAN OSIS
+              MENENTUKAN MASA DEPAN SEKOLAH KITA
             </span>
           </h1>
 
