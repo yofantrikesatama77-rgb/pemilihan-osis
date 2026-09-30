@@ -97,7 +97,7 @@ export const LoginNISN: React.FC<LoginNISNProps> = ({ setActivePage }) => {
               Otentikasi Pemilih
             </h2>
             <p className="mt-1.5 text-xs sm:text-sm text-slate-300">
-              Masukkan 10 digit Nomor Induk Siswa Nasional (NISN) Anda untuk masuk ke Bilik Suara.
+              Masukkan Nomor Induk Siswa Nasional (NISN) / NIP Anda untuk masuk ke Bilik Suara.
             </p>
           </div>
 
@@ -105,7 +105,7 @@ export const LoginNISN: React.FC<LoginNISNProps> = ({ setActivePage }) => {
           <form onSubmit={handleSubmit} className="mt-7 space-y-4">
             <div>
               <label htmlFor="nisn" className="block text-xs font-semibold text-slate-300 mb-2">
-                Nomor Induk Siswa Nasional (NISN)
+                Nomor Induk Siswa Nasional (NISN) / NIP
               </label>
               
               <div className="relative">
@@ -127,7 +127,7 @@ export const LoginNISN: React.FC<LoginNISNProps> = ({ setActivePage }) => {
                 />
               </div>
               <p className="text-[11px] text-slate-400 mt-1.5">
-                * Tanpa password. Cukup masukkan NISN terdaftar.
+                * Tanpa password. Cukup masukkan NISN / NIP terdaftar.
               </p>
             </div>
 

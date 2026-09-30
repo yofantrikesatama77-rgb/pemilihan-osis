@@ -112,7 +112,7 @@ const AppContent: React.FC = () => {
               onClick={() => setActivePage('admin-login')}
               className="text-slate-500 hover:text-slate-300 transition-colors"
             >
-              Portal Panitia
+              yofantrik-e
             </button>
           </div>
         </div>
