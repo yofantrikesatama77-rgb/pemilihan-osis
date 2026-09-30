@@ -114,7 +114,7 @@ export const LoginNISN: React.FC<LoginNISNProps> = ({ setActivePage }) => {
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  maxLength={12}
+                  maxLength={20}
                   placeholder="Contoh: 0078123403"
                   value={nisnInput}
                   onChange={(e) => {
